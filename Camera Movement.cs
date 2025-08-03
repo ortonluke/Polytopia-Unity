@@ -6,19 +6,23 @@ public class CameraMovement : MonoBehaviour
 {
     [SerializeField] private GameObject map;
     private Transform tform;
-    [SerializeField] private float z;
-
-    // Start is called before the first frame update
+    private Camera cam;
+    [SerializeField] private float initialZoom;
     void Start()
     {
         tform = GetComponent<Transform>();
+        cam = GetComponent<Camera>();
+
         MapGeneration mapGen = map.GetComponent<MapGeneration>();
         int boardSize = mapGen.boardSize;
 
-        tform.position = new Vector3(boardSize / 2f, boardSize / 2f, z * -1);
+        //Starting Position
+        tform.position = new Vector3((boardSize / 2f) - 0.5f, (boardSize / 2f) - 0.5f, -10f);
+
+        //Set Zoom (5 default)
+        cam.orthographicSize = initialZoom;
     }
 
-    // Update is called once per frame
     void Update()
     {
         
