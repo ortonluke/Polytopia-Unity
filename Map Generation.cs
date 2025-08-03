@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 public class MapGeneration : MonoBehaviour
 {
     [SerializeField] private GameObject tile;
-    [SerializeField] private int boardSize;
+    public int boardSize;
 
     // Start is called before the first frame update
     void Start()
