@@ -18,10 +18,11 @@ public class CameraMovement : MonoBehaviour
         cam = GetComponent<Camera>();
 
         MapGeneration mapGen = map.GetComponent<MapGeneration>();
-        int boardSize = mapGen.boardSize;
+        int width = mapGen.width;
+        int height = mapGen.height;
 
         //Starting Position
-        tform.position = new Vector3((boardSize / 2f) - 0.5f, (boardSize / 2f) - 0.5f, -10f);
+        tform.position = new Vector3((width / 2f) - 0.5f, (height / 2f) - 0.5f, -10f);
 
         //Set Zoom (5 default)
         cam.orthographicSize = initialZoom;
