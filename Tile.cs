@@ -53,9 +53,13 @@ public class Tile : MonoBehaviour
         return ogColor;
     }
 
-    private void SetFadedColor()
+    public void SetFadedColor()
     {
         Color fadedColor = Color.Lerp(ogColor, Color.white, 0.3f);
         render.color = fadedColor;
+    }
+    public void ResetColor()
+    {
+        render.color = ogColor;
     }
 }
