@@ -8,7 +8,7 @@ public class Tile : MonoBehaviour
     private SpriteRenderer render;
 
     private float greenIntensity;
-
+    private Color ogColor;
     // Start is called before the first frame update
     void Start()
     {
@@ -49,7 +49,13 @@ public class Tile : MonoBehaviour
             }
             
         }
+        ogColor = new Color(0f, greenIntensity / 255f, 0f, 1f);
+        return ogColor;
+    }
 
-        return new Color(0f, greenIntensity / 255f, 0f, 1f);
+    private void SetFadedColor()
+    {
+        Color fadedColor = Color.Lerp(ogColor, Color.white, 0.3f);
+        render.color = fadedColor;
     }
 }
