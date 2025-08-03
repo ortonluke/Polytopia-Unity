@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.WSA;
 
 public class Tile : MonoBehaviour
 {
@@ -10,13 +11,14 @@ public class Tile : MonoBehaviour
     private float greenIntensity;
     private Color ogColor;
 
-    public string tileType;
+    [SerializeField] private string tileType;
     // Start is called before the first frame update
     void Start()
     {
         tform = GetComponent<Transform>();
         render = GetComponent<SpriteRenderer>();
-        render.color = GetShade();
+        render.color = GetShade(); //Want to move to SetTileType(), but throws errors?
+
     }
 
     // Update is called once per frame
@@ -25,34 +27,48 @@ public class Tile : MonoBehaviour
         
     }
 
-    Color GetShade()
+    public void SetTileType(string type)
     {
-        if (tform.position.x % 2 == 0)
+        tileType = type;
+        //render.color = GetShade();     //doesn't work, referencing a null instance of an object?
+    }
+
+    private Color GetShade()
+    {
+        if (tileType == "Land")
         {
-            if (tform.position.y % 2 == 0)
+            if (tform.position.x % 2 == 0)
             {
-                greenIntensity = 100f;
+                if (tform.position.y % 2 == 0)
+                {
+                    greenIntensity = 100f;
+                }
+                else
+                {
+                    greenIntensity = 150f;
+                }
+
             }
             else
             {
-                greenIntensity = 150f;
+                if (tform.position.y % 2 == 0)
+                {
+                    greenIntensity = 150f;
+                }
+                else
+                {
+                    greenIntensity = 100f;
+                }
+
             }
-            
+            ogColor = new Color(0, greenIntensity / 255, 0, 1);
         }
-        else
+        else if (tileType == "Water")
         {
-            if (tform.position.y % 2 == 0)
-            {
-                greenIntensity = 150f;
-            }
-            else
-            {
-                greenIntensity = 100f;
-            }
-            
+            ogColor = new Color(0, 160f / 255f, 1, 1);
         }
-        ogColor = new Color(0f, greenIntensity / 255f, 0f, 1f);
-        return ogColor;
+
+            return ogColor;
     }
 
     public void SetFadedColor()
