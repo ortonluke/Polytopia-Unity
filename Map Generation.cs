@@ -9,6 +9,21 @@ public class MapGeneration : MonoBehaviour
     [SerializeField] private GameObject tile;
     public int boardSize;
 
+    [Range(0, 100)]
+    [SerializeField] private int iniChance;
+    [Range(1, 8)]
+    [SerializeField] private int birthLimit;
+    [Range(1, 8)]
+    [SerializeField] private int deathLimit;
+
+    [Range(1, 10)]
+    [SerializeField] private int numR;
+    private int count = 0; //maybe clean this later?
+
+    [SerializeField] private Vector3Int tmapSize;
+
+
+
     private int[,] GenerateMapData()
     {
         int[,] map = new int[boardSize, boardSize];
@@ -18,12 +33,12 @@ public class MapGeneration : MonoBehaviour
             for (int y = 0; y < boardSize; y++)
             {
                 /*
-                 * 0 = Water
-                 * 1 = Land
+                 * 0 = Water (dead)
+                 * 1 = Land (alive)
                  */
 
                 // Example: Checkerboard pattern
-                map[x, y] = (x + y) % 2 == 0 ? 1 : 0;
+                map[x, y] = Random.Range(1, 101) < iniChance ? 1 : 0;
             }
         }
 
