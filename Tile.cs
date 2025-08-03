@@ -9,6 +9,8 @@ public class Tile : MonoBehaviour
 
     private float greenIntensity;
     private Color ogColor;
+
+    public string tileType;
     // Start is called before the first frame update
     void Start()
     {
