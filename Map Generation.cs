@@ -28,14 +28,21 @@ public class MapGeneration : MonoBehaviour
     [Range(1, 10)]
     [SerializeField] private int numSimMountain;
 
+    [SerializeField] private BuildCreating buildCreator;
+
+    private int[,] map;
+
     //[SerializeField] private Vector3Int tmapSize;
     private void GenerateTiles()
     {
-        int[,] map = GenerateMapData(iniChance, landBirthLimit, landDeathLimit);
+        map = GenerateMapData(iniChance, landBirthLimit, landDeathLimit);
         int[,] mountainMap = GenerateMapData(mountainChance, mounBirthLimit, mounDeathLimit);
 
         //Merge Maps
         map = MergeMaps(map, mountainMap, 2);
+
+        //Generate Key Structures
+        buildCreator.GenerateCapital();
 
         PrintMap(map);
 
@@ -165,7 +172,7 @@ public class MapGeneration : MonoBehaviour
         return outMap;
     }
 
-    private void PrintMap(int[,] map)
+    public void PrintMap(int[,] map)
     {
         string output = "";
         for (int y = height - 1; y >= 0; y--)
@@ -177,6 +184,11 @@ public class MapGeneration : MonoBehaviour
             output += "\n";
         }
         Debug.Log(output);
+    }
+
+    public int[,] GetMap()
+    {
+        return map;
     }
 
     // Start is called before the first frame update
