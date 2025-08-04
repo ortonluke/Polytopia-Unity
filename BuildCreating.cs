@@ -5,6 +5,8 @@ using UnityEngine;
 public class BuildCreating : MonoBehaviour
 {
     [SerializeField] private MapGeneration mapGenerator;
+    [SerializeField] private GameObject capitalPrefab;
+
     private int width;
     private int height;
 
@@ -17,22 +19,25 @@ public class BuildCreating : MonoBehaviour
         buildMap = GenerateEmptyMap();
 
         bool isValid = false;
-        int neighb;
+        int neighb = 0;
 
         int counter = 0;
         while (!isValid)
         {
+            //Infinite loop breaker just in case can't find a suitable spot for capital
             if (counter == 20)
             {
                 Debug.Log("took too long to generate");
                 break;
             }
+            counter++;
+
             //Pick a random spot on the map for potential capital location
             int x = Random.Range(0, width);
             int y = Random.Range(0, height);
 
-            // Only consider placing the capital on land
-            if (map[x, y] != 0) continue;
+            // Only consider placing the capital on land (skip if not land)
+            if (map[x, y] != 1) continue;
 
             //Make sure no more than 3 water tiles next to capital
             neighb = 0;
@@ -52,17 +57,18 @@ public class BuildCreating : MonoBehaviour
                     if (map[checkX, checkY] == 0) // Count water tiles
                         neighb++;
                 }
+            }
 
-                if (neighb <= 3)
-                {
-                    buildMap[x, y] = 9; //9 = Capital
-                    Debug.Log("Found the capital: [" + x + ", " + y + "]");
-                    mapGenerator.PrintMap(buildMap);
-                    isValid = true;
-                    break;
-                }
+            if (neighb <= 3)
+            {
+                buildMap[x, y] = 9; //9 = Capital
+                Instantiate(capitalPrefab, new Vector2(x, y), Quaternion.identity, this.transform);
+                Debug.Log("Found the capital: [" + x + ", " + y + "]");
+                mapGenerator.PrintMap(buildMap);
+                isValid = true;
             }
         }
+        
     }
     private int[,] GenerateEmptyMap()
     {
