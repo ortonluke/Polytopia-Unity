@@ -184,7 +184,7 @@ public class MapGeneration : MonoBehaviour
             output += "\n";
         }
         Debug.Log(output);
-    }
+    }   
 
     public int[,] GetMap()
     {

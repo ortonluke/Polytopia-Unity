@@ -19,8 +19,14 @@ public class BuildCreating : MonoBehaviour
         bool isValid = false;
         int neighb;
 
+        int counter = 0;
         while (!isValid)
         {
+            if (counter == 20)
+            {
+                Debug.Log("took too long to generate");
+                break;
+            }
             //Pick a random spot on the map for potential capital location
             int x = Random.Range(0, width);
             int y = Random.Range(0, height);
@@ -52,6 +58,8 @@ public class BuildCreating : MonoBehaviour
                     buildMap[x, y] = 9; //9 = Capital
                     Debug.Log("Found the capital: [" + x + ", " + y + "]");
                     mapGenerator.PrintMap(buildMap);
+                    isValid = true;
+                    break;
                 }
             }
         }
