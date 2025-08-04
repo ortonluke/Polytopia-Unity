@@ -67,6 +67,14 @@ public class Tile : MonoBehaviour
         {
             ogColor = new Color(0, 160f / 255f, 1, 1);
         }
+        else if (tileType == "Mountain")
+        {
+            ogColor = new Color(70f/255f, 70f/255f, 70f/255f, 1);
+        }
+        else
+        {
+            ogColor = new Color(1, 0, 0, 1);
+        }
 
             return ogColor;
     }

@@ -13,19 +13,33 @@ public class MapGeneration : MonoBehaviour
     [Range(0, 100)]
     [SerializeField] private int iniChance;
     [Range(1, 8)]
-    [SerializeField] private int birthLimit;
+    [SerializeField] private int landBirthLimit;
     [Range(1, 8)]
-    [SerializeField] private int deathLimit;
-
+    [SerializeField] private int landDeathLimit;
     [Range(1, 10)]
-    [SerializeField] private int numSim;
+    [SerializeField] private int numSimLand;
 
-    [SerializeField] private Vector3Int tmapSize;
+    [Range(1, 100)]
+    [SerializeField] private int mountainChance;
+    [Range(1, 8)]
+    [SerializeField] private int mounBirthLimit;
+    [Range(1, 8)]
+    [SerializeField] private int mounDeathLimit;
+    [Range(1, 10)]
+    [SerializeField] private int numSimMountain;
 
+    //[SerializeField] private Vector3Int tmapSize;
     private void GenerateTiles()
     {
-        int[,] map = GenerateMapData();
+        int[,] map = GenerateMapData(iniChance, landBirthLimit, landDeathLimit);
+        int[,] mountainMap = GenerateMapData(mountainChance, mounBirthLimit, mounDeathLimit);
 
+        //Merge Maps
+        map = MergeMaps(map, mountainMap, 2);
+
+        PrintMap(map);
+
+        //Create Tiles
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
@@ -36,21 +50,25 @@ public class MapGeneration : MonoBehaviour
 
                 if (map[x, y] == 1)
                 {
-                    tileData.SetTileType("Land");
+                    tileData.SetTileType("Land"); //1 = Land
                 }
                 else if (map[x, y] == 0)
                 {
-                    tileData.SetTileType("Water");
+                    tileData.SetTileType("Water"); //0 = Water
+                }
+                else if (map[x,y] == 2)
+                {
+                    tileData.SetTileType("Mountain"); //2 = Mountain
                 }
             }
         }
     }
 
-    private int[,] GenerateMapData()
+    private int[,] GenerateMapData(int chance, int birthlimit, int deathlimit)
     {
         /*
-        * 0 = Water (dead)
-        * 1 = Land (alive)
+        * 0 = Dead
+        * 1 = Alive
         */
         
         int[,] map = new int[width, height];
@@ -60,15 +78,14 @@ public class MapGeneration : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                
-                map[x, y] = Random.Range(1, 101) < iniChance ? 1 : 0;
+                map[x, y] = Random.Range(1, 101) < chance ? 1 : 0;
             }
         }
 
         //Run Simulations
-        for (int i = 0; i < numSim; i++)
+        for (int i = 0; i < numSimLand; i++)
         {
-            map = simMap(map);
+            map = simMap(map, landBirthLimit, landDeathLimit);
         }
 
         PrintMap(map);
@@ -76,7 +93,7 @@ public class MapGeneration : MonoBehaviour
         return map;
     }
 
-    private int[,] simMap(int[,] oldMap)
+    private int[,] simMap(int[,] oldMap, int birthlimit, int deathlimit)
     {
         int[,] newMap = new int[width, height];
         int neighb;
@@ -98,42 +115,55 @@ public class MapGeneration : MonoBehaviour
                     {
                         neighb++;
                     }
-
                 }
 
                 if (oldMap[x, y] == 1)
                 {
-                    if (neighb < deathLimit) newMap[x, y] = 0;
-
+                    if (neighb < deathlimit)
+                    {
+                        newMap[x, y] = 0;
+                    }
 
                     else
                     {
                         newMap[x, y] = 1;
-
-
                     }
                 }
 
                 if (oldMap[x, y] == 0)
                 {
-                    if (neighb > birthLimit) newMap[x, y] = 1;
-
+                    if (neighb > birthlimit)
+                    {
+                        newMap[x, y] = 1;
+                    }
 
                     else
                     {
                         newMap[x, y] = 0;
                     }
-
                 }
             }
-
-
-            
         }
         return newMap;
     }
 
-    
+    private int[,] MergeMaps(int[,] map1, int[,] map2, int value)
+    {
+        int[,] outMap = map1;
+
+        //Use positions of 1s on map2 to put "value" on outMap, and return outMap
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (map2[x, y] == 0 && outMap[x,y] == 1) //only replace land tiles with new tiles
+                {
+                    outMap[x, y] = value;
+                }
+            }
+        }
+        return outMap;
+    }
 
     private void PrintMap(int[,] map)
     {
