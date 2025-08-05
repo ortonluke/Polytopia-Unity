@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PopupPanel : MonoBehaviour
@@ -9,21 +10,29 @@ public class PopupPanel : MonoBehaviour
     [SerializeField] private float slideSpeed = 500f;
 
     //Troops
-    private List<GameObject> troopsUnlocked;
+    private List<GameObject> troopsUnlocked = new List<GameObject>();
     [SerializeField] private GameObject warriorTroopPrefab;
 
     //Structures
-    private List<GameObject> structuresUnlocked;
+    private List<GameObject> structuresUnlocked = new List<GameObject>();
     [SerializeField] private GameObject farmPrefab;
 
     private bool isVisible = false;
 
+    private void Start()
+    {
+        troopsUnlocked.Add(warriorTroopPrefab);
+
+        structuresUnlocked.Add(farmPrefab);
+    }
+
     public void ShowTroops()
     {
         ClearContent();
-        foreach (var icon in troopsUnlocked)
+        Debug.Log(troopsUnlocked); 
+        foreach (GameObject icon in troopsUnlocked)
         {
-            var btn = Instantiate(icon, contentArea);
+            GameObject btn = Instantiate(icon, contentArea);
         }
         SlideIn();
     }
@@ -31,9 +40,9 @@ public class PopupPanel : MonoBehaviour
     public void ShowStructures() 
     {
         ClearContent();
-        foreach (var icon in structuresUnlocked)
+        foreach (GameObject icon in structuresUnlocked)
         {
-            var btn = Instantiate(icon, contentArea);
+            GameObject btn = Instantiate(icon, contentArea);
         }
         SlideIn();
     }

@@ -4,8 +4,21 @@ using UnityEngine;
 
 public class Capital : Clickable
 {
+    private PopupPanel popupPanel;
+
     public override void OnClick()
     {
         Debug.Log("Capital Clicked");
+
+        //Show Troop Panel
+        if (popupPanel != null)
+        {
+            popupPanel.ShowTroops();
+        }
+    }
+
+    private void Start()
+    {
+        popupPanel = FindObjectOfType<PopupPanel>();
     }
 }
