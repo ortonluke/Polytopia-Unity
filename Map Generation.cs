@@ -41,10 +41,10 @@ public class MapGeneration : MonoBehaviour
         //Merge Maps
         map = MergeMaps(map, mountainMap, 2);
 
+        PrintMap(map);
+
         //Generate Key Structures
         buildCreator.GenerateCapital();
-
-        PrintMap(map);
 
         //Create Tiles
         for (int x = 0; x < width; x++)

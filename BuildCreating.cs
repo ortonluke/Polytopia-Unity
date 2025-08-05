@@ -71,7 +71,7 @@ public class BuildCreating : MonoBehaviour
                 isValid = true;
             }
         }
-        
+        mapGenerator.PrintMap(buildMap);
     }
     private int[,] GenerateEmptyMap()
     {
