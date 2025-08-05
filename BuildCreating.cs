@@ -36,6 +36,9 @@ public class BuildCreating : MonoBehaviour
             int x = Random.Range(0, width);
             int y = Random.Range(0, height);
 
+            //Skip potential capital locations on the edge of the map
+            if (x == 0 || x == width - 1 || y == 0 || y == height - 1) continue;
+
             // Only consider placing the capital on land (skip if not land)
             if (map[x, y] != 1) continue;
 
