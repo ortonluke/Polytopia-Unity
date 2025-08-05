@@ -26,10 +26,21 @@ public class PopupPanel : MonoBehaviour
         structuresUnlocked.Add(farmPrefab);
     }
 
+    void Update()
+    {
+        if (isVisible && Input.GetMouseButtonDown(0))
+        {
+            // Close if clicked outside the panel
+            if (!RectTransformUtility.RectangleContainsScreenPoint(panelTransform, Input.mousePosition))
+            {
+                SlideOut();
+            }
+        }
+    }
+
     public void ShowTroops()
     {
         ClearContent();
-        Debug.Log(troopsUnlocked); 
         foreach (GameObject icon in troopsUnlocked)
         {
             GameObject btn = Instantiate(icon, contentArea);

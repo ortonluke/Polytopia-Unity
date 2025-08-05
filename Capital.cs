@@ -8,8 +8,6 @@ public class Capital : Clickable
 
     public override void OnClick()
     {
-        Debug.Log("Capital Clicked");
-
         //Show Troop Panel
         if (popupPanel != null)
         {
