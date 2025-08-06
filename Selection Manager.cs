@@ -8,6 +8,8 @@ public class SelectionManager : MonoBehaviour
     private Vector2 lastClickPos;
     private int clickIndex = 0;
 
+    private Clickable lastClicked;
+
     void Update()
     {
         Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -15,6 +17,20 @@ public class SelectionManager : MonoBehaviour
 
         if (hits.Length > 0 && !Input.GetMouseButton(2))
         {
+            // Sort hits by SpriteRenderer.sortingOrder descending
+            System.Array.Sort(hits, (a, b) =>
+            {
+                SpriteRenderer srA = a.collider.GetComponent<SpriteRenderer>();
+                SpriteRenderer srB = b.collider.GetComponent<SpriteRenderer>();
+
+                int orderA = srA != null ? srA.sortingOrder : 0;
+                int orderB = srB != null ? srB.sortingOrder : 0;
+
+                return orderB.CompareTo(orderA); // higher order first
+            });
+
+            Debug.Log("hits:" + hits);
+
             Tile tile = null;
             List<Clickable> clickables = new List<Clickable>();
 
@@ -47,18 +63,9 @@ public class SelectionManager : MonoBehaviour
             // --- Handle click ---
             if (Input.GetMouseButtonDown(0) && clickables.Count > 0)
             {
-                // Cycle if same spot clicked again
-                if (mouseWorldPos == lastClickPos)
-                {
-                    clickIndex = (clickIndex + 1) % clickables.Count;
-                }
-                else
-                {
-                    lastClickPos = mouseWorldPos;
-                    clickIndex = 0;
-                }
-
-                clickables[clickIndex].OnClick();
+                bool topIsTroop = clickables[0] is Troop;
+                bool hasBuildingBelow = clickables.Count > 1 && clickables[1] is Structure;
+                bool buildingSpawnsTroops = hasBuildingBelow && clickables[1] is TroopBuilding;
             }
         }
         else
@@ -70,5 +77,10 @@ public class SelectionManager : MonoBehaviour
                 lastHoveredTile = null;
             }
         }
+    }
+
+    public Clickable GetLastClicked()
+    {
+        return lastClicked;
     }
 }

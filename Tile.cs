@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.WSA;
 
-public class Tile : MonoBehaviour
+public class Tile : Clickable
 {
     private Transform tform;
     private SpriteRenderer render;
@@ -87,5 +87,10 @@ public class Tile : MonoBehaviour
     public void ResetColor()
     {
         render.color = ogColor;
+    }
+
+    public override void OnClick()
+    {
+        Debug.Log("Tile Clicked: " + this.transform.position);
     }
 }

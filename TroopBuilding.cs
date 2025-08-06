@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Capital : Clickable
+public class TroopBuilding : Structure
 {
     private PopupPanel popupPanel;
+    [SerializeField] private string buildingType;
 
     public override void OnClick()
     {
