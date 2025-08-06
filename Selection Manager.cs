@@ -66,6 +66,43 @@ public class SelectionManager : MonoBehaviour
                 bool topIsTroop = clickables[0] is Troop;
                 bool hasBuildingBelow = clickables.Count > 1 && clickables[1] is Structure;
                 bool buildingSpawnsTroops = hasBuildingBelow && clickables[1] is TroopBuilding;
+
+                bool allowCycle = false;
+
+                if (topIsTroop)
+                {
+                    if (hasBuildingBelow && !buildingSpawnsTroops)
+                    {
+                        // Troop on non troop spawning building allow cycling
+                        allowCycle = true;
+                    }
+                    else
+                    {
+                        // Troop alone, or troop on troop spawning building means no cycling
+                        allowCycle = false;
+                    }
+                }
+
+                if (allowCycle)
+                {
+                    // Cycle if same spot clicked again
+                    if (mouseWorldPos == lastClickPos)
+                        clickIndex = (clickIndex + 1) % clickables.Count;
+                    else
+                    {
+                        lastClickPos = mouseWorldPos;
+                        clickIndex = 0;
+                    }
+                }
+                else
+                {
+                    // Always pick topmost
+                    clickIndex = 0;
+                    lastClickPos = mouseWorldPos;
+                }
+
+                lastClicked = clickables[clickIndex];
+                clickables[clickIndex].OnClick();
             }
         }
         else
