@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SelectionManager : MonoBehaviour
 {
@@ -12,6 +13,10 @@ public class SelectionManager : MonoBehaviour
 
     void Update()
     {
+        // Don't process world clicks/hover if pointer is over UI
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
         Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D[] hits = Physics2D.RaycastAll(mouseWorldPos, Vector2.zero);
 
